@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.tomasdvorak</groupId>
-    <artifactId>eet-client</artifactId>
-    <version>3.0.0</version>
+    <artifactId>eet-client-shaded</artifactId>
+    <version>3.0.3</version>
 
     <description>
         Client / Connector for the #EET - registration of sales is an advanced system of online communication between entrepreneurs and Financial Authority.
@@ -305,7 +305,49 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com</pattern>
+                                    <shadedPattern>cz.tomasdvorak.shaded.com</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net</pattern>
+                                    <shadedPattern>cz.tomasdvorak.shaded.net</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org</pattern>
+                                    <shadedPattern>cz.tomasdvorak.shaded.org</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax</pattern>
+                                    <shadedPattern>cz.tomasdvorak.shaded.javax</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -360,5 +402,13 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-trusteca</id>
+            <name>Releases</name>
+            <url>https://nexus.trusteca.com/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
